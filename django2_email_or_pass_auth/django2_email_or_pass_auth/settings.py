@@ -56,7 +56,7 @@ AUTH_USER_MODEL = 'custom_auth.CustomUser'
 TEMPLATES = [
     {
         'BACKEND': 'django.template.backends.django.DjangoTemplates',
-        'DIRS': [],
+        'DIRS': ['home/templates', 'accounts/templates'],
         'APP_DIRS': True,
         'OPTIONS': {
             'context_processors': [

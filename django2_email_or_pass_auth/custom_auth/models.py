@@ -12,6 +12,11 @@ class CustomUser(AbstractUser):
 
     def save(self, *args, **kwargs):
 
+        if self.email == "":
+            self.email = None
+        if self.phone_number == "":
+            self.phone_number = None
+
         if not self.email and not self.phone_number and self.username:
             #  when we create superuser the both email and phonenumber is empty so we have to handle like this
             if '@' in self.username:
