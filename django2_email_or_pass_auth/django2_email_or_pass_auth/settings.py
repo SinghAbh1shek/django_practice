@@ -37,6 +37,7 @@ INSTALLED_APPS = [
     'django.contrib.sessions',
     'django.contrib.messages',
     'django.contrib.staticfiles',
+    'custom_auth'
 ]
 
 MIDDLEWARE = [
@@ -50,6 +51,7 @@ MIDDLEWARE = [
 ]
 
 ROOT_URLCONF = 'django2_email_or_pass_auth.urls'
+AUTH_USER_MODEL = 'custom_auth.CustomUser'
 
 TEMPLATES = [
     {
