@@ -1,19 +1,25 @@
 from django.shortcuts import render, redirect
 from custom_auth.models import CustomUser
-from django.contrib.auth import login
+from django.contrib.auth import login, authenticate, logout
+from django.contrib.auth.decorators import login_required
 from django.db import IntegrityError
 
 def register(request):
+    print("USER:", request.user, "AUTHENTICATED:", request.user.is_authenticated)
+
+    # if request.user.is_authenticated:
+    #     return redirect('home')
+    
     if request.method == 'POST':
         first_name = request.POST.get('first_name')
         last_name = request.POST.get('last_name')
-        email_phone = request.POST.get('email_phone').replace(" ", "")  # replace for removing whitespace
-        password = request.POST.get('password')
-        passwordConfirmation = request.POST.get('passwordConfirmation')
+        email_phone = request.POST.get('email_phone', '').replace(" ", "").lower()  # replace for removing whitespace
+        password = request.POST.get('password', '')
+        passwordConfirmation = request.POST.get('passwordConfirmation', '')
 
         if not email_phone or not password or not passwordConfirmation:
             print({'error': 'all fields are required'})
-            return redirect('register.html')
+            return redirect('register')
         
         if password != passwordConfirmation:
             print({'error': 'passwords do not match'})
@@ -64,8 +70,35 @@ def register(request):
             print(e)
             return redirect('register')
         
-        except:
-            print('Something went Wrong')
-            return redirect('register')
-        
     return render(request, 'register.html')
+
+def login_page(request):
+    # if request.user.is_authenticated:
+    #     return redirect('home')
+    print("USER:", request.user, "AUTHENTICATED:", request.user.is_authenticated)
+
+
+    if request.method == 'POST':
+        email_phone = request.POST.get('email_phone', '').replace(" ", "").lower()
+        password = request.POST.get('password', '')
+
+        if not email_phone or not password:
+            print('All Fields Required')
+            return redirect('login')
+        
+
+        user = authenticate(request, username = email_phone, password = password)
+        if not user:
+            print('Invalid Credentials')
+            return redirect('login')
+        
+        login(request, user)
+        return redirect('home')
+
+    return render(request, 'login.html')
+
+@login_required(login_url='login')
+def logout_page(request):
+    logout(request)
+    print("Logout succeed")
+    return redirect('home')

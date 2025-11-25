@@ -29,13 +29,6 @@ class CustomUser(AbstractUser):
                 raise ValueError('Phone Number must contains digit only')
             if len(self.phone_number) != 10:
                 raise ValueError('Phone Number must be exactly 10 number')
-            
-        if self.email:
-            self.username = self.email
-        elif self.phone_number:
-            self.username = self.phone_number
-        else:
-            raise ValueError('Email or phone number is required')
         
         super().save(*args, **kwargs)
     def __str__(self):
