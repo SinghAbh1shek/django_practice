@@ -5,10 +5,8 @@ from django.contrib.auth.decorators import login_required
 from django.db import IntegrityError
 
 def register(request):
-    print("USER:", request.user, "AUTHENTICATED:", request.user.is_authenticated)
-
-    # if request.user.is_authenticated:
-    #     return redirect('home')
+    if request.user.is_authenticated:
+        return redirect('home')
     
     if request.method == 'POST':
         first_name = request.POST.get('first_name')
@@ -73,9 +71,8 @@ def register(request):
     return render(request, 'register.html')
 
 def login_page(request):
-    # if request.user.is_authenticated:
-    #     return redirect('home')
-    print("USER:", request.user, "AUTHENTICATED:", request.user.is_authenticated)
+    if request.user.is_authenticated:
+        return redirect('home')
 
 
     if request.method == 'POST':
