@@ -8,6 +8,15 @@ class UserRole(BaseModel):
     is_customer = models.BooleanField(default=True)
     is_seller = models.BooleanField(default=False)
 
+    def __str__(self):
+        if self.is_seller and self.is_customer:
+            return 'Seller and Customer'
+        elif self.is_customer:
+            return 'Customer'
+        elif self.is_seller:
+            return 'Seller'
+        else:
+            return 'None'
 
 
 class Customer(BaseModel):
