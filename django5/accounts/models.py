@@ -1,3 +1,19 @@
 from django.db import models
+from django.contrib.auth .models import User
+from utils.utility.models import BaseModel
 
-# Create your models here.
+
+class UserRole(BaseModel):
+    user = models.OneToOneField(User, on_delete=models.CASCADE, related_name='user_role')
+    is_customer = models.BooleanField(default=True)
+    is_seller = models.BooleanField(default=False)
+
+
+
+class Customer(BaseModel):
+    user = models.OneToOneField(User, on_delete=models.CASCADE, related_name='customer')
+    phone = models.CharField(max_length=12, null=True, blank=True)
+
+    def __str__(self):
+        return self.user.username
+
