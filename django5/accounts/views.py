@@ -100,7 +100,7 @@ def registration(request):
                 user.customer.phone = email_phone
                 user.customer.save()
 
-        login(request, user)
+        login(request, user, backend='django.contrib.auth.backends.ModelBackend')
         return redirect('home')
 
 

@@ -10,11 +10,11 @@ class UserRole(BaseModel):
 
     def __str__(self):
         if self.is_seller and self.is_customer:
-            return 'Seller and Customer'
+            return f'Seller and Customer | {self.user.username}'
         elif self.is_customer:
-            return 'Customer'
+            return f'Customer | {self.user.username}'
         elif self.is_seller:
-            return 'Seller'
+            return f'Seller | {self.user.username}'
         else:
             return 'None'
 
