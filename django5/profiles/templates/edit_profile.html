@@ -1,0 +1,10 @@
+{% extends "utils/base.html" %}
+{% block title %}Edit Profile
+    {% if user.is_authenticated %} | {{user.first_name}} {{user.last_name}} {% endif %}
+{% endblock title %}
+{% block start %}
+
+<h1>This is edit profile page</h1>
+
+
+{% endblock start %}

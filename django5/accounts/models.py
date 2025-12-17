@@ -10,11 +10,11 @@ class UserRole(BaseModel):
 
     def __str__(self):
         if self.is_seller and self.is_customer:
-            return f'Seller and Customer | {self.user.username}'
+            return f'Seller and Customer'
         elif self.is_customer:
-            return f'Customer | {self.user.username}'
+            return f'Customer'
         elif self.is_seller:
-            return f'Seller | {self.user.username}'
+            return f'Seller'
         else:
             return 'None'
 
@@ -22,6 +22,7 @@ class UserRole(BaseModel):
 class Customer(BaseModel):
     user = models.OneToOneField(User, on_delete=models.CASCADE, related_name='customer')
     phone = models.CharField(max_length=12, null=True, blank=True)
+    avatar = models.ImageField(upload_to='avatars/', null=True, blank=True)
 
     def __str__(self):
         return self.user.username
