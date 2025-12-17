@@ -1,4 +1,4 @@
-from django.db.models.signals import post_save
+from django.db.models.signals import post_save, post_delete
 from django.dispatch import receiver
 from .models import Customer, UserRole
 from django.contrib.auth.models import User
@@ -6,6 +6,7 @@ from django.contrib.auth.models import User
 import requests
 from django.core.files.base import ContentFile
 from allauth.account.signals import user_signed_up
+from allauth.socialaccount.models import SocialAccount
 
 @receiver(post_save, sender=User)
 def customer_post_save(sender, instance, created, **kwargs):
@@ -14,16 +15,18 @@ def customer_post_save(sender, instance, created, **kwargs):
         UserRole.objects.get_or_create(user = instance)
 
 @receiver(user_signed_up)
-def save_google_profile_image(request, sociallogin, **kwargs):
-    if sociallogin.account.provider != 'google':
+def save_google_profile_image(request, user, **kwargs):
+    try:
+        social_account = SocialAccount.objects.get(user = user, provider = 'google')
+
+    except SocialAccount.DoesNotExist:
         return
     
-    user = sociallogin.user
-    data = sociallogin.account.extra_data
+    data = social_account.extra_data
 
     picture_url = data.get('picture')
 
-    if not picture_url:
+    if not picture_url: 
         return
     
     customer, _ = Customer.objects.get_or_create(user = user)
@@ -40,3 +43,9 @@ def save_google_profile_image(request, sociallogin, **kwargs):
             )
     except Exception as e:
         print('Google image fetched failed: ', e)
+
+
+@receiver(post_delete, sender=Customer)
+def delete_customer_avatar(sender, instance, **kwargs):
+    if instance.avatar:
+        instance.avatar.delete(save=False)
