@@ -92,8 +92,11 @@
                     <!-- Profile Image (CLICK → PROFILE PAGE) -->
                     <a href="{% url 'profile' %}">
                         <div class="avatar-wrapper">
-                            <img src="{{ user.customer.avatar.url|default:'/static/images/default-avatar.png' }}"
-                                 alt="profile">
+                    {% if user.customer.avatar %}
+                            <img src="{{ user.customer.avatar.url }}" alt="profile">
+                    {% else %}
+                            <img src="/media/avatars/default-avatar.jpeg" alt="profile">
+                    {% endif %}
                         </div>
                     </a>
 

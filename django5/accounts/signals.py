@@ -3,9 +3,40 @@ from django.dispatch import receiver
 from .models import Customer, UserRole
 from django.contrib.auth.models import User
 
+import requests
+from django.core.files.base import ContentFile
+from allauth.account.signals import user_signed_up
 
 @receiver(post_save, sender=User)
 def customer_post_save(sender, instance, created, **kwargs):
     if created:
-        Customer.objects.create(user = instance)
-        UserRole.objects.create(user = instance)
+        Customer.objects.get_or_create(user = instance)
+        UserRole.objects.get_or_create(user = instance)
+
+@receiver(user_signed_up)
+def save_google_profile_image(request, sociallogin, **kwargs):
+    if sociallogin.account.provider != 'google':
+        return
+    
+    user = sociallogin.user
+    data = sociallogin.account.extra_data
+
+    picture_url = data.get('picture')
+
+    if not picture_url:
+        return
+    
+    customer, _ = Customer.objects.get_or_create(user = user)
+    if customer.avatar:
+        return
+    
+    try:
+        response = requests.get(picture_url, timeout=10)
+        if response.status_code == 200:
+            customer.avatar.save(
+                f"{user.username}_google.jpg",
+                ContentFile(response.content),
+                save = True
+            )
+    except Exception as e:
+        print('Google image fetched failed: ', e)
