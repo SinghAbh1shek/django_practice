@@ -98,3 +98,56 @@
     font-weight: 600;
     color: #0062cc;
 }
+
+/* Action buttons container */
+.profile-actions {
+    display: flex;
+    flex-direction: column;
+    gap: 10px;
+    align-items: stretch;
+}
+
+/* Save button */
+.btn-save {
+    background-color: #0062cc;
+    color: #fff;
+    border: none;
+    border-radius: 1.5rem;
+    padding: 10px 16px;
+    font-weight: 600;
+    cursor: pointer;
+    transition: all 0.2s ease;
+}
+
+.btn-save:hover {
+    background-color: #004a9f;
+    transform: translateY(-1px);
+}
+
+/* Home button (anchor styled as button) */
+.btn-home {
+    display: inline-block;
+    text-align: center;
+    background-color: #e9ecef;
+    color: #333;
+    border-radius: 1.5rem;
+    padding: 10px 16px;
+    font-weight: 600;
+    text-decoration: none;
+    transition: all 0.2s ease;
+}
+
+.btn-home:hover {
+    background-color: #d6d8db;
+    color: #000;
+    text-decoration: none;
+    transform: translateY(-1px);
+}
+
+/* Mobile friendly */
+@media (max-width: 768px) {
+    .profile-actions {
+        flex-direction: row;
+        justify-content: space-between;
+    }
+}
