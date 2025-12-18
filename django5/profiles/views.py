@@ -14,6 +14,7 @@ def edit_profile(request):
         phone = request.POST.get('phone', '').strip()
         email = request.POST.get('email', '').replace(' ', '').lower()
         username = request.POST.get('username', '').replace(' ', '').lower()
+        avatar = request.FILES.get('avatar')
 
         if not username or (not email and not phone):
             print('error: please fill the required field')
@@ -39,7 +40,15 @@ def edit_profile(request):
 
         customer = user.customer
         customer.phone = phone
+
+        if avatar:
+            if customer.avatar:
+                customer.avatar.delete(save=False)
+            customer.avatar = avatar
+            
         customer.save()
+
+            
         
         print('Sucess: user profile edited')
         return redirect('profile')
