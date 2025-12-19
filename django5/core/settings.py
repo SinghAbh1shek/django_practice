@@ -45,6 +45,7 @@ INSTALLED_APPS = [
     'accounts',
     'home',
     'profiles',
+    'products',
 
 
     'django.contrib.sites',
