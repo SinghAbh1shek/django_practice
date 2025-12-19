@@ -19,11 +19,33 @@ class UserRole(BaseModel):
             return 'None'
 
 
-class Customer(BaseModel):
-    user = models.OneToOneField(User, on_delete=models.CASCADE, related_name='customer')
+class BaseProfile(BaseModel):
+    user = models.OneToOneField(User, on_delete=models.CASCADE)
     phone = models.CharField(max_length=12, null=True, blank=True)
     avatar = models.ImageField(upload_to='avatars/', null=True, blank=True)
 
+    class Meta:
+        abstract = True
+
+class Customer(BaseProfile):
+    class Meta:
+        db_table = 'Customer'
+
     def __str__(self):
-        return self.user.username
+        return f"customer - {self.user.username}"
+    
+class Shopkeeper(BaseProfile):
+    STATUS_CHOICES = [
+        ('pending', 'Pending'),
+        ('verified', 'Verified'),
+        ('rejected', 'Rejected'),
+    ]
+
+    shop_name = models.CharField(max_length=100)
+    gst_number = models.CharField(max_length=15, unique=True)
+    adhar_number = models.CharField(max_length=14, unique=True)
+    adhar_image = models.ImageField(upload_to='shopkeepers_docs/')
+    bmp_id = models.CharField(max_length=100, unique=True)
+    verification_status = models.CharField(max_length=10, choices=STATUS_CHOICES, default='pending')
+    comments = models.TextField(null=True, blank=True)
 
