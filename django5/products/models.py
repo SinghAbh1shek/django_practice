@@ -18,6 +18,8 @@ class Product(BaseModel):
     product_rating = models.FloatField(null=True, blank=True)
     mrp = models.DecimalField(max_digits=10, decimal_places=2)
 
+    trending_score = models.FloatField(default=0)
+
     category = models.ForeignKey(Category, on_delete=models.PROTECT, related_name='products')
 
     def __str__(self):

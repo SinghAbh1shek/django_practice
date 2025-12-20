@@ -43,9 +43,11 @@ class Shopkeeper(BaseProfile):
 
     shop_name = models.CharField(max_length=100)
     gst_number = models.CharField(max_length=15, unique=True)
-    adhar_number = models.CharField(max_length=14, unique=True)
-    adhar_image = models.ImageField(upload_to='shopkeepers_docs/')
+    adhar_number = models.CharField(max_length=12, unique=True)
+    adhar_image = models.ImageField(upload_to='shopkeepers_docs/', null=True, blank=True)
     bmp_id = models.CharField(max_length=100, unique=True)
     verification_status = models.CharField(max_length=10, choices=STATUS_CHOICES, default='pending')
     comments = models.TextField(null=True, blank=True)
 
+    def __str__(self):
+        return f"Seller - {self.shop_name}"
