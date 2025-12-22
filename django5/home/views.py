@@ -31,7 +31,9 @@ def index(request):
 
     new_products = (VendorProduct.objects.filter(product__images__isnull = False)
                    .order_by('-created_at').distinct()[:12])
-
+    
+    dropdown_categories = (Category.objects.filter(parent__isnull = True).distinct())
+    
 
     context = {
         'categories': categories,
@@ -39,6 +41,7 @@ def index(request):
         'trending': trending,
         'top_rated': top_rated,
         'new_products': new_products,
+        'dropdown_categories': dropdown_categories,
         }
 
     return render(request, 'home.html', context)
