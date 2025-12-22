@@ -29,7 +29,16 @@ def index(request):
     .order_by('-product__product_rating').distinct()[:5]
     )
 
+    new_products = (VendorProduct.objects.filter(product__images__isnull = False)
+                   .order_by('-created_at').distinct()[:12])
 
-    context = {'categories': categories, 'new_arrivals': new_arrivals, 'trending': trending, 'top_rated': top_rated}
+
+    context = {
+        'categories': categories,
+        'new_arrivals': new_arrivals,
+        'trending': trending,
+        'top_rated': top_rated,
+        'new_products': new_products,
+        }
 
     return render(request, 'home.html', context)
