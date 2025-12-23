@@ -25,6 +25,12 @@ def index(request):
                    .order_by('-created_at').distinct()[:12])
     
     dropdown_categories = (Category.objects.filter(parent__isnull = True).distinct())
+
+    gaming = Category.objects.filter(parent__category_name__iexact="Gaming")   
+
+    mobile_accessories = Category.objects.filter(parent__category_name__iexact="Mobile Accessories")   
+    mobile_accessories = Category.objects.filter(parent__category_name__iexact="Mobile Accessories")   
+
     
 
     context = {
@@ -34,6 +40,8 @@ def index(request):
         'top_rated': top_rated,
         'new_products': new_products,
         'dropdown_categories': dropdown_categories,
+        'gaming': gaming,
+        'mobile_accessories': mobile_accessories,
         }
 
     return render(request, 'home.html', context)

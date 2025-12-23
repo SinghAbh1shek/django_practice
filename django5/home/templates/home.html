@@ -51,7 +51,7 @@
             <div class="container">
                 <ul class="desktop-menu-category-list">
                     <li class="menu-category">
-                        <a href="#" class="menu-title">Home</a>
+                        <a href="{% url "home" %}" class="menu-title">Home</a>
                     </li>
 
                     <li class="menu-category">
@@ -80,10 +80,13 @@
                         <a href="#" class="menu-title">Men's</a>
 
                         <ul class="dropdown-list">
-                            <li class="dropdown-item"><a href="#">Shirt</a></li>
-                            <li class="dropdown-item"><a href="#">Shorts & Jeans</a></li>
-                            <li class="dropdown-item"><a href="#">Safety Shoes</a></li>
-                            <li class="dropdown-item"><a href="#">Wallet</a></li>
+                            {% for dropdown_category in dropdown_categories %}
+                            {% if dropdown_category.category_name == "Men's wear" %}
+                                {% for child in dropdown_category.cat_child.all|slice:'5' %}
+                                    <li class="dropdown-item"><a href="#">{{ child.category_name|truncatewords:2 }}</a></li>
+                                {% endfor %}
+                            {% endif %}
+                            {% endfor %}
                         </ul>
                     </li>
 
@@ -91,42 +94,36 @@
                         <a href="#" class="menu-title">Women's</a>
 
                         <ul class="dropdown-list">
-                            <li class="dropdown-item"><a href="#">Dress & Frock</a></li>
-                            <li class="dropdown-item"><a href="#">Earrings</a></li>
-                            <li class="dropdown-item"><a href="#">Necklace</a></li>
-                            <li class="dropdown-item"><a href="#">Makeup Kit</a></li>
+                            {% for dropdown_category in dropdown_categories %}
+                            {% if dropdown_category.category_name == "Women's wear" %}
+                                {% for child in dropdown_category.cat_child.all|slice:'5' %}
+                                    <li class="dropdown-item"><a href="#">{{ child.category_name|truncatewords:2 }}</a></li>
+                                {% endfor %}
+                            {% endif %}
+                            {% endfor %}
                         </ul>
                     </li>
 
                     <li class="menu-category">
-                        <a href="#" class="menu-title">Jewelyr</a>
+                        <a href="#" class="menu-title">Games</a>
 
                         <ul class="dropdown-list">
-                            <li class="dropdown-item"><a href="#">Earrings</a></li>
-                            <li class="dropdown-item"><a href="#">Couple Rings</a></li>
-                            <li class="dropdown-item"><a href="#">Necklace</a></li>
-                            <li class="dropdown-item"><a href="#">Bracelets</a></li>
+                            {% for game in gaming %}
+                            <li class="dropdown-item"><a href="#">{{game.category_name|truncatewords:5}}</a></li>
+                            {% endfor %}
                         </ul>
                     </li>
 
                     <li class="menu-category">
-                        <a href="#" class="menu-title">Perfume</a>
+                        <a href="#" class="menu-title">Mobile Accessories</a>
 
                         <ul class="dropdown-list">
-                            <li class="dropdown-item"><a href="#">Clothes Perfume</a></li>
-                            <li class="dropdown-item"><a href="#">Deodorant</a></li>
-                            <li class="dropdown-item"><a href="#">Flower Fragrance</a></li>
-                            <li class="dropdown-item"><a href="#">Air Freshener</a></li>
+                            {% for mobile_accessory in mobile_accessories|slice:"5" %}
+                            <li class="dropdown-item"><a href="#">{{mobile_accessory.category_name|truncatewords:2}}</a></li>
+                            {% endfor %}
                         </ul>
                     </li>
 
-                    <li class="menu-category">
-                        <a href="#" class="menu-title">Blog</a>
-                    </li>
-
-                    <li class="menu-category">
-                        <a href="#" class="menu-title">Hot Offers</a>
-                    </li>
                 </ul>
             </div>
         </nav>
@@ -164,85 +161,6 @@
                 </button>
             </div>
 
-            <ul class="mobile-menu-category-list">
-                <li class="menu-category"><a href="#" class="menu-title">Home</a></li>
-
-                <li class="menu-category">
-                    <button class="accordion-menu" data-accordion-btn>
-                        <p class="menu-title">Men's</p>
-
-                        <div>
-                            <ion-icon name="add-outline" class="add-icon"></ion-icon>
-                            <ion-icon name="remove-outline" class="remove-icon"></ion-icon>
-                        </div>
-                    </button>
-
-                    <ul class="submenu-category-list " data-accordion>
-                        <li class="submenu-category"><a href="#" class="submenu-title">Shirt</a></li>
-                        <li class="submenu-category"><a href="#" class="submenu-title">Short & Jeans</a></li>
-                        <li class="submenu-category"><a href="#" class="submenu-title">Safety Shoes</a></li>
-                        <li class="submenu-category"><a href="#" class="submenu-title">Wallet</a></li>
-                    </ul>
-                </li>
-
-                <li class="menu-category">
-                    <button class="accordion-menu" data-accordion-btn>
-                        <p class="menu-title">Women's</p>
-
-                        <div>
-                            <ion-icon name="add-outline" class="add-icon"></ion-icon>
-                            <ion-icon name="remove-outline" class="remove-icon"></ion-icon>
-                        </div>
-                    </button>
-
-                    <ul class="submenu-category-list" data-accordion>
-                        <li class="submenu-category"><a href="#" class="submenu-title">Dress & Frock</a></li>
-                        <li class="submenu-category"><a href="#" class="submenu-title">Earrings</a></li>
-                        <li class="submenu-category"><a href="#" class="submenu-title">Necklace</a></li>
-                        <li class="submenu-category"><a href="#" class="submenu-title">Makeup Kit</a></li>
-                    </ul>
-                </li>
-
-                <li class="menu-category">
-                    <button class="accordion-menu" data-accordion-btn>
-                        <p class="menu-title">Jewelyr</p>
-
-                        <div>
-                            <ion-icon name="add-outline" class="add-icon"></ion-icon>
-                            <ion-icon name="remove-outline" class="remove-icon"></ion-icon>
-                        </div>
-                    </button>
-
-                    <ul class="submenu-category-list" data-accordion>
-                        <li class="submenu-category"><a href="#" class="submenu-title">Earrings</a></li>
-                        <li class="submenu-category"><a href="#" class="submenu-title">Couple Rings</a></li>
-                        <li class="submenu-category"><a href="#" class="submenu-title">Necklace</a></li>
-                        <li class="submenu-category"><a href="#" class="submenu-title">Bracelets</a></li>
-                    </ul>
-                </li>
-
-                <li class="menu-category">
-                    <button class="accordion-menu" data-accordion-btn>
-                        <p class="menu-title">Perfume</p>
-
-                        <div>
-                            <ion-icon name="add-outline" class="add-icon"></ion-icon>
-                            <ion-icon name="remove-outline" class="remove-icon"></ion-icon>
-                        </div>
-                    </button>
-
-                    <ul class="submenu-category-list" data-accordion>
-                        <li class="submenu-category"><a href="#" class="submenu-title">Clothes Perfume</a></li>
-                        <li class="submenu-category"><a href="#" class="submenu-title">Deodorant</a></li>
-                        <li class="submenu-category"><a href="#" class="submenu-title">Flower Fragrance</a></li>
-                        <li class="submenu-category"><a href="#" class="submenu-title">Air Freshener</a></li>
-                    </ul>
-                </li>
-
-                <li class="menu-category"><a href="#" class="menu-title">Blog</a></li>
-
-                <li class="menu-category"><a href="#" class="menu-title">Hot Offers</a></li>
-            </ul>
 
             <div class="menu-bottom">
                 <ul class="menu-category-list">
