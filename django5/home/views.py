@@ -7,14 +7,6 @@ def index(request):
     categories = Category.objects.annotate(
         product_count=Count('cat_child__products', distinct=True)).filter(product_count__gt = 0).order_by("-id")[:10]
     
-    for category in categories:
-        image = (
-            ProductImage.objects
-            .filter(product__category__parent=category)
-            .select_related('product')
-            .first()
-        )
-        category.display_image = image.image.url if image else None
     
 
     new_arrivals = ( VendorProduct.objects.filter(product__images__isnull=False)

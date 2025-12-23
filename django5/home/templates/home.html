@@ -62,12 +62,12 @@
                             <ul class="dropdown-panel-list">
                                 <li class="menu-title"><a href="#">{{dropdown_category.category_name}}</a></li>
 
-                                {% for child in dropdown_category.cat_child.all %}
+                                {% for child in dropdown_category.cat_child.all|slice:"5" %}
                                 <li class="panel-list-item"><a href="#">{{child}}</a></li>
                                 {% endfor %}
                                 
                                 <li class="panel-list-item">
-                                    <img src="https://i.postimg.cc/MT2mT9ty/electronics-banner-1.jpg" alt="image" width="250" height="119">
+                                    <img src="{{dropdown_category.get_first_product_image}}" alt="image" width="250" height="119">
                                 </li>
                             </ul>
                             {% endfor %}
@@ -330,7 +330,7 @@
 
                     <div class="category-item">
                         <div class="category-img-box">
-                            <img src="{{ category.display_image }}" alt="dress & frock" width="30">
+                            <img src="{{ category.get_first_product_image }}" alt="dress & frock" width="30">
                         </div>
                         <div class="category-content-box">
                             <div class="category-content-flex">

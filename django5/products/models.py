@@ -8,6 +8,24 @@ class Category(BaseModel):
 
     def __str__(self):
         return self.category_name
+    
+    def is_leaf(self):
+        return not self.cat_child.exists()
+
+    def get_first_product_image(self):
+
+        if self.is_leaf():
+            product = self.products.first()
+            if product and product.images.first():
+                return product.images.first().image.url
+            return None
+
+        for child in self.cat_child.all():
+            image = child.get_first_product_image()
+            if image:
+                return image
+
+        return None
 
 
 class Product(BaseModel):
