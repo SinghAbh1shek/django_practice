@@ -45,3 +45,8 @@ def index(request):
         }
 
     return render(request, 'home.html', context)
+
+
+def search(request):
+    products = VendorProduct.objects.all()[:20]
+    return render(request, 'search.html', context={'products':products})
