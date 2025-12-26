@@ -4,7 +4,7 @@ os.environ['DJANGO_SETTINGS_MODULE'] = 'core.settings'
 django.setup()
 from products.models import *
 
-from django.db.models import Avg, Min, Max, Count, Sum, Q
+from django.db.models import Avg, Min, Max, Count, Sum, Q, Subquery, OuterRef
 
 # product = VendorProduct.objects.aggregate(price = Max('vendor_selling_price'))
 # print(product)
@@ -18,11 +18,12 @@ from django.db.models import Avg, Min, Max, Count, Sum, Q
 
 
 # print(Category.objects.count())
-categories = Category.objects.filter(parent__isnull = True).prefetch_related('cat_child')
-for cat in categories:
-    child1 = cat.cat_child.first()
-    print(child1.cat_child.exists())
-    print(child1.cat_child.first().cat_child.exists())
+
+# categories = Category.objects.filter(parent__isnull = True).prefetch_related('cat_child')
+# for cat in categories:
+#     child1 = cat.cat_child.first()
+#     print(child1.cat_child.exists())
+#     print(child1.cat_child.first().cat_child.exists())
 
 # for cat in categories:
 #     print(f"Parent: {cat.category_name}")
@@ -39,3 +40,15 @@ for cat in categories:
 
 # for parent in parents:
 #     get_children(parent)
+
+
+
+vendor = VendorProduct.objects.filter(
+    shopkeeper = OuterRef('id')
+).order_by('-created_at').values('product__title')[:1]
+# shopkeepers = Shopkeeper.objects.all()
+shopkeepers = Shopkeeper.objects.annotate(vendor_product = Subquery(vendor))
+
+for shopkeeper in shopkeepers:
+    # print(shopkeeper.shop_name)
+    print(shopkeeper.vendor_product)

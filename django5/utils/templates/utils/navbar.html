@@ -81,14 +81,15 @@
         <img src="https://res.cloudinary.com/mhmd/image/upload/v1571398888/Group_1514_tjekh3_zkts1c.svg"
              alt="logo" width="150">
     </a>
+    <form method="get" action="{% url 'search' %}" class="header-search-container">
 
-    <div class="header-search-container">
-        <input type="search" name="search" class="search-field"
-               placeholder="Enter your product name">
-        <button class="search-btn">
+        <input type="search" name="q" class="search-field" value="{{request.GET.q}}"
+            placeholder="Enter your product name">
+        <button type="submit" class="search-btn">
             <ion-icon name="search-outline"></ion-icon>
         </button>
-    </div>
+
+    </form>
     
     {% if user.is_authenticated %}
 

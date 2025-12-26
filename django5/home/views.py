@@ -2,6 +2,9 @@ from django.shortcuts import render
 from django.contrib.auth.decorators import login_required
 from products.models import *
 from django.db.models import Count
+from django.contrib.postgres.search import SearchVector, SearchRank, SearchQuery, TrigramSimilarity
+#  NOTE: to user TrigamSimilarity we must run "CREATE EXTENSION pg_trgm;" query in our pgadmin
+from django.db.models import Q
 
 def index(request):
     categories = Category.objects.annotate(
@@ -48,5 +51,37 @@ def index(request):
 
 
 def search(request):
-    products = VendorProduct.objects.all()[:20]
+    # products = VendorProduct.objects.all()[:20]
+    search = request.GET.get('q')
+
+
+
+    if search:
+        query = SearchQuery(search)
+
+        vector = (
+            SearchVector('product__title', weight = 'A') +
+            SearchVector('product__category__category_name', weight = 'B') +
+            SearchVector('product__description', weight = 'C')
+        )
+        # vector = SearchVector('product__title', 'product__category__category_name', 'product__description')
+
+        rank = SearchRank(vector, query)
+
+        similarity = (
+            TrigramSimilarity('product__title', search) +
+            TrigramSimilarity('product__category__category_name', search) +
+            TrigramSimilarity('product__description', search)
+        )
+
+        products = (
+        VendorProduct.objects
+            .filter(is_active=True)
+            .only("id", "product__title")
+            .annotate(rank=rank, similarity=similarity)
+        ).filter(Q(rank__gte =0.3) | Q(similarity__gte = 0.3)).distinct().order_by('-rank', '-similarity')[:30]
+    else:
+        products = None
+
+    # print(search)
     return render(request, 'search.html', context={'products':products})
