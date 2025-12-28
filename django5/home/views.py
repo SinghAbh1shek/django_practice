@@ -85,3 +85,6 @@ def search(request):
 
     # print(search)
     return render(request, 'search.html', context={'products':products})
+
+def product_details(request, id):
+    return render(request, 'product_details.html')
