@@ -281,12 +281,12 @@
                                     {% for new_arrival in new_arrivals %}
 
                                     <div class="showcase">
-                                        <a href="#" class="showcase-img-box">
+                                        <a href="{% url "products" new_arrival.id %}" class="showcase-img-box">
                                             <img src="{{new_arrival.product.images.first.image.url}}" alt="{{new_arrival.product.title}}" class="showcase-img" width="70">
                                         </a>
 
                                         <div class="showcase-content">
-                                            <a href="#"><h4 class="showcase-title">{{new_arrival.product.title}}</h4></a>
+                                            <a href="{% url "products" new_arrival.id %}"><h4 class="showcase-title">{{new_arrival.product.title}}</h4></a>
                                             <a href="#" class="showcase-category">{{new_arrival.product.category.category_name}}</a>
 
                                             <div class="price-box">
@@ -309,12 +309,12 @@
 
                                     {% for trend in trending %}
                                     <div class="showcase">
-                                        <a href="#" class="showcase-img-box">
+                                        <a href="{% url "products" trend.id %}" class="showcase-img-box">
                                             <img src="{{trend.product.images.first.image.url}}" alt="{{trend.product.title}}" class="showcase-img" width="70" height='50'>
                                         </a>
 
                                         <div class="showcase-content">
-                                            <a href="#"><h4 class="showcase-title">{{trend.product.title}}</h4></a>
+                                            <a href="{% url "products" trend.id %}"><h4 class="showcase-title">{{trend.product.title}}</h4></a>
                                             <a href="#" class="showcase-category">{{trend.product.category.category_name}}</a>
 
                                             <div class="price-box">
@@ -337,12 +337,12 @@
 
                                     {% for top in top_rated %}
                                     <div class="showcase">
-                                        <a href="#" class="showcase-img-box">
+                                        <a href="{% url "products" top.id %}" class="showcase-img-box">
                                             <img src="{{top.product.images.first.image.url}}" alt="{{top.product.title}}" class="showcase-img" width="70" height='50'>
                                         </a>
 
                                         <div class="showcase-content">
-                                            <a href="#"><h4 class="showcase-title">{{top.product.title}}</h4></a>
+                                            <a href="{% url "products" top.id %}"><h4 class="showcase-title">{{top.product.title}}</h4></a>
                                             <a href="#" class="showcase-category">{{top.product.category.category_name}}</a>
 
                                             <div class="price-box">
@@ -376,25 +376,25 @@
                                     {% comment %} <p class="showcase-badge">15%</p> {% endcomment %}
                                     <p class="showcase-badge angle black">Sale</p>
 
-                                    <div class="showcase-actions">
+                                    {% comment %} <div class="showcase-actions">
                                         <button class="btn-action"><ion-icon name="heart-outline"></ion-icon></button>
                                         <button class="btn-action"><ion-icon name="eye-outline"></ion-icon></button>
                                         <button class="btn-action"><ion-icon name="repeat-outline"></ion-icon></button>
                                         <button class="btn-action"><ion-icon name="bag-add-outline"></ion-icon></button>
-                                    </div>
+                                    </div> {% endcomment %}
                                 </div>
 
                                 <div class="showcase-content">
                                     <a href="#" class="showcase-category">{{new_product.product.category.category_name}}</a>
-                                    <a href="#"><h3 class="showcase-title">{{new_product.product.title}}</h3></a>
+                                    <a href="{% url "products" new_product.id %}"><h3 class="showcase-title">{{new_product.product.title}}</h3></a>
 
-                                    <div class="showcase-rating">
+                                    {% comment %} <div class="showcase-rating">
                                         <ion-icon name="star"></ion-icon>
                                         <ion-icon name="star"></ion-icon>
                                         <ion-icon name="star"></ion-icon>
                                         <ion-icon name="star-outline"></ion-icon>
                                         <ion-icon name="star-outline"></ion-icon>
-                                    </div>
+                                    </div> {% endcomment %}
 
                                     <div class="price-box">
                                         <p class="price">₹{{new_product.vendor_selling_price}}</p>

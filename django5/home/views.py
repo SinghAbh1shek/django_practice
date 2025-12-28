@@ -87,4 +87,11 @@ def search(request):
     return render(request, 'search.html', context={'products':products})
 
 def product_details(request, id):
-    return render(request, 'product_details.html')
+
+    product = VendorProduct.objects.get(id = id)
+
+    
+    context = {
+        'product':product,
+    }
+    return render(request, 'product_details.html', context)
