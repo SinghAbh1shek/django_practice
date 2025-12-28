@@ -95,3 +95,11 @@ def product_details(request, id):
         'product':product,
     }
     return render(request, 'product_details.html', context)
+
+
+def categories(request, id):
+    context = {
+        'id': id
+    }
+
+    return render(request, 'category.html', context)
