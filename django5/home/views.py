@@ -111,10 +111,15 @@ def categories(request, id):
     products = VendorProduct.objects.filter(
         product__category_id__in=category_ids, is_active = True
     )[:28]
+
+    categories = Category.objects.annotate(
+        product_count=Count('products', distinct=True)).filter(id__in = category_ids, product_count__gt = 0).order_by("-id")[:10]
+    
+    
     
     context = {
         'products': products,
-        'category_ids': category_ids,
+        'categories': categories,
     }
 
     return render(request, 'category.html', context)

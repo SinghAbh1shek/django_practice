@@ -9,7 +9,36 @@
 {% block start %}
 
 <section class="products">
-  <h2 class="title">Categories</h2>
+
+  {% if categories.count > 1 %}
+  <div class="category">
+            <div class="container">
+                <div class="category-item-container has-scrollbar">
+
+                    {% for category in categories %}
+
+                    <div class="category-item">
+                        <div class="category-img-box">
+                            <img src="{{ category.get_first_product_image }}" alt="{{category.category_name}}" width="30">
+                        </div>
+                        <div class="category-content-box">
+                            <div class="category-content-flex">
+                                <h3 class="category-item-title">{{category.category_name}}</h3>
+                                <p class="category-item-amount">{{category.product_count}}</p>
+                            </div>
+                            <a href="{% url "categories" category.id %}" class="category-btn">Show All</a>
+                        </div>
+                    </div>
+
+                    {% endfor %}
+                    
+                </div>
+            </div>
+  </div>
+  {% endif %}
+
+  <h2 class="title">Products</h2>
+
 
   <div class="product-grid">
 

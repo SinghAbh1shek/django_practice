@@ -60,7 +60,7 @@
                         <div class="dropdown-panel">
                             {% for dropdown_category in dropdown_categories %}
                             <ul class="dropdown-panel-list">
-                                <li class="menu-title"><a href="#">{{dropdown_category.category_name}}</a></li>
+                                <li class="menu-title"><a href="{% url "categories" dropdown_category.id %}">{{dropdown_category.category_name}}</a></li>
 
                                 {% for child in dropdown_category.cat_child.all|slice:"5" %}
                                 <li class="panel-list-item"><a href="{% url "categories" child.id %}">{{child}}</a></li>
@@ -83,7 +83,7 @@
                             {% for dropdown_category in dropdown_categories %}
                             {% if dropdown_category.category_name == "Men's wear" %}
                                 {% for child in dropdown_category.cat_child.all|slice:'5' %}
-                                    <li class="dropdown-item"><a href="#">{{ child.category_name|truncatewords:2 }}</a></li>
+                                    <li class="dropdown-item"><a href="{% url "categories" child.id %}">{{ child.category_name|truncatewords:2 }}</a></li>
                                 {% endfor %}
                             {% endif %}
                             {% endfor %}
@@ -97,7 +97,7 @@
                             {% for dropdown_category in dropdown_categories %}
                             {% if dropdown_category.category_name == "Women's wear" %}
                                 {% for child in dropdown_category.cat_child.all|slice:'5' %}
-                                    <li class="dropdown-item"><a href="#">{{ child.category_name|truncatewords:2 }}</a></li>
+                                    <li class="dropdown-item"><a href="{% url "categories" child.id %}">{{ child.category_name|truncatewords:2 }}</a></li>
                                 {% endfor %}
                             {% endif %}
                             {% endfor %}
@@ -109,7 +109,7 @@
 
                         <ul class="dropdown-list">
                             {% for game in gaming %}
-                            <li class="dropdown-item"><a href="#">{{game.category_name|truncatewords:5}}</a></li>
+                            <li class="dropdown-item"><a href="{% url "categories" game.id %}">{{game.category_name|truncatewords:5}}</a></li>
                             {% endfor %}
                         </ul>
                     </li>
@@ -119,7 +119,7 @@
 
                         <ul class="dropdown-list">
                             {% for mobile_accessory in mobile_accessories|slice:"5" %}
-                            <li class="dropdown-item"><a href="#">{{mobile_accessory.category_name|truncatewords:2}}</a></li>
+                            <li class="dropdown-item"><a href="{% url "categories" mobile_accessory.id %}">{{mobile_accessory.category_name|truncatewords:2}}</a></li>
                             {% endfor %}
                         </ul>
                     </li>
@@ -248,14 +248,14 @@
 
                     <div class="category-item">
                         <div class="category-img-box">
-                            <img src="{{ category.get_first_product_image }}" alt="dress & frock" width="30">
+                            <img src="{{ category.get_first_product_image }}" alt="{{category.category_name}}" width="30">
                         </div>
                         <div class="category-content-box">
                             <div class="category-content-flex">
                                 <h3 class="category-item-title">{{category.category_name}}</h3>
                                 <p class="category-item-amount">{{category.product_count}}</p>
                             </div>
-                            <a href="#" class="category-btn">Show All</a>
+                            <a href="{% url "categories" category.id %}" class="category-btn">Show All</a>
                         </div>
                     </div>
 
@@ -287,7 +287,7 @@
 
                                         <div class="showcase-content">
                                             <a href="{% url "products" new_arrival.id %}"><h4 class="showcase-title">{{new_arrival.product.title}}</h4></a>
-                                            <a href="#" class="showcase-category">{{new_arrival.product.category.category_name}}</a>
+                                            <div class="showcase-category">{{new_arrival.product.category.category_name}}</div>
 
                                             <div class="price-box">
                                                 <p class="price">₹{{new_arrival.vendor_selling_price}} <del>{{new_arrival.product.mrp}}</del></p>
@@ -315,7 +315,7 @@
 
                                         <div class="showcase-content">
                                             <a href="{% url "products" trend.id %}"><h4 class="showcase-title">{{trend.product.title}}</h4></a>
-                                            <a href="#" class="showcase-category">{{trend.product.category.category_name}}</a>
+                                            <div class="showcase-category">{{trend.product.category.category_name}}</div>
 
                                             <div class="price-box">
                                                 <p class="price">₹{{trend.vendor_selling_price}} <del>{{trend.product.mrp}}</del></p>
@@ -343,7 +343,7 @@
 
                                         <div class="showcase-content">
                                             <a href="{% url "products" top.id %}"><h4 class="showcase-title">{{top.product.title}}</h4></a>
-                                            <a href="#" class="showcase-category">{{top.product.category.category_name}}</a>
+                                            <div class="showcase-category">{{top.product.category.category_name}}</div>
 
                                             <div class="price-box">
                                                 <p class="price">₹{{top.vendor_selling_price}} <del>{{top.product.mrp}}</del></p>
@@ -385,7 +385,7 @@
                                 </div>
 
                                 <div class="showcase-content">
-                                    <a href="#" class="showcase-category">{{new_product.product.category.category_name}}</a>
+                                    <div class="showcase-category">{{new_product.product.category.category_name}}</div>
                                     <a href="{% url "products" new_product.id %}"><h3 class="showcase-title">{{new_product.product.title}}</h3></a>
 
                                     {% comment %} <div class="showcase-rating">
