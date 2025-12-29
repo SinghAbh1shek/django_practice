@@ -98,8 +98,23 @@ def product_details(request, id):
 
 
 def categories(request, id):
+    def get_all_category_ids_by_id(category_id):
+        ids = [category_id]
+        children = Category.objects.filter(parent_id=category_id).values_list("id", flat=True)
+        for child_id in children:
+            ids.extend(get_all_category_ids_by_id(child_id))
+        return ids
+
+
+    category_ids = get_all_category_ids_by_id(id)
+
+    products = VendorProduct.objects.filter(
+        product__category_id__in=category_ids, is_active = True
+    )[:28]
+    
     context = {
-        'id': id
+        'products': products,
+        'category_ids': category_ids,
     }
 
     return render(request, 'category.html', context)

@@ -63,7 +63,7 @@
                                 <li class="menu-title"><a href="#">{{dropdown_category.category_name}}</a></li>
 
                                 {% for child in dropdown_category.cat_child.all|slice:"5" %}
-                                <li class="panel-list-item"><a href="#">{{child}}</a></li>
+                                <li class="panel-list-item"><a href="{% url "categories" child.id %}">{{child}}</a></li>
                                 {% endfor %}
                                 
                                 <li class="panel-list-item">
