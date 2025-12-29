@@ -21,7 +21,7 @@
 
       <div class="product-content">
         <p class="category">{{product.product.category.category_name}}</p>
-        <h3 class="product-title">{{product.product.title}}</h3>
+        <a class="text-decoration-none text-dark" href="{% url "products" product.id %}"><h3 class="product-title">{{product.product.title}}</h3></a>
 
         <div class="price-box">
           <span class="price">₹{{product.vendor_selling_price}}</span>
