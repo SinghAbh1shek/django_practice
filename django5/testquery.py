@@ -53,23 +53,30 @@ from django.db.models import Avg, Min, Max, Count, Sum, Q, Subquery, OuterRef
 #     # print(shopkeeper.shop_name)
 #     print(shopkeeper.vendor_product)
 
-category = Category.objects.get(category_name="Home and Furniture")
-vendor = VendorProduct.objects.filter(product__category__id = 400)
+# category = Category.objects.get(category_name="Home and Furniture")
+# vendor = VendorProduct.objects.filter(product__category__id = 400)
 # print(category.id)
 # print(vendor)
 
 
-def get_all_category_ids_by_id(category_id):
-    ids = [category_id]
-    children = Category.objects.filter(parent_id=category_id).values_list("id", flat=True)
-    for child_id in children:
-        ids.extend(get_all_category_ids_by_id(child_id))
-    return ids
+# def get_all_category_ids_by_id(category_id):
+#     ids = [category_id]
+#     children = Category.objects.filter(parent_id=category_id).values_list("id", flat=True)
+#     for child_id in children:
+#         ids.extend(get_all_category_ids_by_id(child_id))
+#     return ids
 
 
-category_ids = get_all_category_ids_by_id(335)
+# category_ids = get_all_category_ids_by_id(335)
 
-vendor_products = VendorProduct.objects.filter(
-    product__category_id__in=category_ids, is_active = True
-)
-print(vendor_products)
+# vendor_products = VendorProduct.objects.filter(
+#     product__category_id__in=category_ids, is_active = True
+# )
+# print(vendor_products)
+
+from orders.models import Cart
+from accounts.models import Customer
+cart = Cart.objects.first()
+
+user = Customer.objects.last()
+print(Cart.customer)

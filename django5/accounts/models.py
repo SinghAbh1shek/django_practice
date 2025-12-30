@@ -2,7 +2,6 @@ from django.db import models
 from django.contrib.auth .models import User
 from utils.utility.models import BaseModel
 
-
 class UserRole(BaseModel):
     user = models.OneToOneField(User, on_delete=models.CASCADE, related_name='user_role')
     is_customer = models.BooleanField(default=True)
@@ -33,6 +32,10 @@ class Customer(BaseProfile):
 
     def __str__(self):
         return f"customer - {self.user.username}"
+    
+    def cartItemsCount(self):
+        from orders.models import CartItems
+        return CartItems.objects.filter(cart__customer = self, cart__is_paid = False).count()
     
 class Shopkeeper(BaseProfile):
     STATUS_CHOICES = [
