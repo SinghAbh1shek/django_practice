@@ -116,10 +116,10 @@
                     <span class="count">0</span>
                 </button>
 
-                <button class="action-btn">
+                <a href="{% url "cart" %}" class="action-btn">
                     <ion-icon name="bag-handle-outline"></ion-icon>
                     <span class="count">{{request.user.customer.cartItemsCount}}</span>
-                </button>
+                </a>
             </div>
 
             <!-- Manage Account -->

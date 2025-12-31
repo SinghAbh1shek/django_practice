@@ -1,12 +1,23 @@
-from django.shortcuts import render
+from django.shortcuts import render, redirect
 from django.http import HttpResponseRedirect
 from .models import Cart, CartItems
 from accounts.models import Customer
 from products.models import VendorProduct
+from django.contrib.auth.decorators import login_required
 
+@login_required(login_url='login')
 def get_cart(request):
-    return render(request, 'cart.html')
+    cart = None
+    try:    
+        cart = Cart.objects.get(customer = request.user.customer, is_paid = False)
+    except Exception as e:
+        print("Something Wrong")
+    context = {
+        'cart': cart
+    }
+    return render(request, 'cart.html', context)
 
+@login_required(login_url='login')
 def add_to_cart(request):
     try:
         user = request.user.id
@@ -21,7 +32,8 @@ def add_to_cart(request):
     except Exception as e:
         print('Something is wrong')
         return HttpResponseRedirect(request.META.get('HTTP_REFERER'))
-    
+
+@login_required(login_url='login')
 def remove_to_cart(request):
     try:
         user = request.user.id

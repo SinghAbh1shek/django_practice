@@ -84,13 +84,11 @@
                     </div> {% endcomment %}
 
                     <div class="product-count mt-3">
-                        <label>Add to cart</label>
-                        <div class="display-flex">
-                            <a href= "/order/remove-to-cart/?product_id={{product.id}}" class="qtyminus text-decoration-none">-</a>
-                            <input type="text" value="1" class="qty">
-                            <a href= "/order/add-to-cart/?product_id={{product.id}}" class="qtyplus text-decoration-none">+</a>
-                        </div>
-                        <a href="#" class="round-black-btn mt-3 text-decoration-none">Go to Cart</a>
+                        {% if in_cart %}
+                            <a href="{% url "add-to-cart" %}?product_id={{product.id}}" class="round-black-btn mt-3 text-decoration-none">Go to Cart</a>
+                        {% else %}
+                            <a href="{% url "add-to-cart" %}?product_id={{product.id}}" class="round-black-btn mt-3 text-decoration-none">Add to Cart</a>
+                        {% endif %}
                     </div>
 
                 </div>
