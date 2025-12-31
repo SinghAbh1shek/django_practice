@@ -18,7 +18,7 @@
                         <h5 class="mb-4">
                             Cart (<span>{{ cart.customer.cartItemsCount }}</span> items)
                         </h5>
-                        <a href="#" class="btn btn-sm btn-danger">Empty Cart</a>
+                        <a href="{% url "clear_cart" %}" class="btn btn-sm btn-danger">Empty Cart</a>
                     </div>
 
                     {% for item in cart.cart_items.all %}
@@ -46,8 +46,8 @@
 
                             <div class="d-flex justify-content-between align-items-center mt-2">
                                 <div>
-                                    <a href="#" class="text-danger text-uppercase small me-3 text-decoration-none">
-                                        <i class="fas fa-trash-alt me-1"></i> Remove
+                                    <a href="{% url "remove_item_from_cart" %}?product_id={{item.product.id}}" class="text-danger text-uppercase small me-3 text-decoration-none">
+                                        <i class="fas fa-trash-alt me-1"></i> Remove from cart
                                     </a>
                                     <a href="#" class="text-primary text-uppercase small text-decoration-none">
                                         <i class="fas fa-heart me-1"></i> Wishlist
@@ -71,7 +71,7 @@
                         <ul class="list-group list-group-flush">
                             <li class="list-group-item d-flex justify-content-between px-0">
                                 Subtotal
-                                <span>₹</span>
+                                <span>₹{{cart.getCartTotal}}</span>
                             </li>
 
                             <li class="list-group-item d-flex justify-content-between px-0">
@@ -81,7 +81,7 @@
 
                             <li class="list-group-item d-flex justify-content-between px-0 fw-bold">
                                 Total
-                                <span>₹</span>
+                                <span>₹{{cart.getCartTotal}}</span>
                             </li>
                         </ul>
 

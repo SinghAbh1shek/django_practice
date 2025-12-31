@@ -1,6 +1,7 @@
 from django.db import models
 from accounts.models import Customer
 from products.models import VendorProduct
+from django.db.models import Sum, F
 
 
 class Cart(models.Model):
@@ -9,6 +10,15 @@ class Cart(models.Model):
 
     def has_product(self, product):
         return self.cart_items.filter(product=product).exists()
+    
+    def getCartTotal(self):
+        total = self.cart_items.aggregate(
+            total = Sum(F('product__vendor_selling_price') * F('quantity'))
+        )['total']
+        return total or 0
+    
+    def clear_cart(self):
+        self.cart_items.all().delete()
 
 class CartItems(models.Model):
     cart = models.ForeignKey(Cart, on_delete=models.CASCADE, related_name='cart_items')

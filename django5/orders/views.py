@@ -58,3 +58,28 @@ def remove_to_cart(request):
         print('Something is wrong')
         return HttpResponseRedirect(request.META.get('HTTP_REFERER'))
 
+def remove_item_from_cart(request):
+    try:
+        product_id = request.GET.get("product_id")
+        product = VendorProduct.objects.get(id = product_id)
+        cart = Cart.objects.get(customer = request.user.customer, is_paid=False)
+        cart_items = CartItems.objects.filter(cart = cart, product = product)
+        if cart_items.exists():
+            cart_items.delete()
+            cart_items.save()
+        return HttpResponseRedirect(request.META.get('HTTP_REFERER'))
+        
+
+    except Exception as e:
+        print('Something goes wrong')
+        return HttpResponseRedirect(request.META.get('HTTP_REFERER'))
+
+def empty_cart(request):
+    try:
+        cart = Cart.objects.get(customer = request.user.customer, is_paid=False)
+        cart.clear_cart()
+        return HttpResponseRedirect(request.META.get('HTTP_REFERER'))
+
+    except Exception as e:
+        print('Something goes wrong')
+        return HttpResponseRedirect(request.META.get('HTTP_REFERER'))
