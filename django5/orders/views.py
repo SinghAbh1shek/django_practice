@@ -58,6 +58,7 @@ def remove_to_cart(request):
         print('Something is wrong')
         return HttpResponseRedirect(request.META.get('HTTP_REFERER'))
 
+@login_required(login_url='login')
 def remove_item_from_cart(request):
     try:
         product_id = request.GET.get("product_id")
@@ -74,6 +75,7 @@ def remove_item_from_cart(request):
         print('Something goes wrong')
         return HttpResponseRedirect(request.META.get('HTTP_REFERER'))
 
+@login_required(login_url='login')
 def empty_cart(request):
     try:
         cart = Cart.objects.get(customer = request.user.customer, is_paid=False)
@@ -83,3 +85,7 @@ def empty_cart(request):
     except Exception as e:
         print('Something goes wrong')
         return HttpResponseRedirect(request.META.get('HTTP_REFERER'))
+    
+
+def wishlist(request):
+    return render(request, 'wishlist.html')
