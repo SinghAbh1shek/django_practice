@@ -85,7 +85,7 @@
 
                     <div class="product-count mt-3">
                         {% if in_cart %}
-                            <a href="{% url "add-to-cart" %}?product_id={{product.id}}" class="round-black-btn mt-3 text-decoration-none">Go to Cart</a>
+                            <a href="{% url "cart" %}" class="round-black-btn mt-3 text-decoration-none">Go to Cart</a>
                         {% else %}
                             <a href="{% url "add-to-cart" %}?product_id={{product.id}}" class="round-black-btn mt-3 text-decoration-none">Add to Cart</a>
                         {% endif %}

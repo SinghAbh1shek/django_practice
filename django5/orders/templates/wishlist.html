@@ -1,6 +1,6 @@
 {% extends "utils/base.html" %}
 
-{% block title %}Wishlist {{request.GET.q|truncatewords:2}}{% endblock title %}
+{% block title %}Wishlist | {{request.user.customer.WishlistItemsCount}} Items {% endblock title %}
 {% block head %}
 {% load static %}
 <link rel="stylesheet" href="{% static "css/search.css" %}">
