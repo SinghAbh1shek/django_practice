@@ -8,4 +8,6 @@ urlpatterns = [
     path('clear-cart/', empty_cart, name='clear_cart'),
     path('cart/', get_cart, name='cart'),
     path('wishlist/', wishlist, name='wishlist'),
+    path('add-to-wishlist/', add_to_wishlist, name='add-to-wishlist'),
+    path('remove-to-wishlist/', remove_to_wishlist, name='remove-to-wishlist'),
 ]

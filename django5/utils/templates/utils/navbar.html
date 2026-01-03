@@ -111,10 +111,10 @@
 
             <!-- Wishlist + Cart -->
             <div class="header-user-actions">
-                <button class="action-btn">
+                <a href="{% url "wishlist" %}" class="action-btn">
                     <ion-icon name="heart-outline"></ion-icon>
-                    <span class="count">0</span>
-                </button>
+                    <span class="count">{{request.user.customer.WishlistItemsCount}}</span>
+                </a>
 
                 <a href="{% url "cart" %}" class="action-btn">
                     <ion-icon name="bag-handle-outline"></ion-icon>

@@ -2,6 +2,7 @@ from django.db import models
 from accounts.models import Customer
 from products.models import VendorProduct
 from django.db.models import Sum, F
+from utils.utility.models import BaseModel
 
 
 class Cart(models.Model):
@@ -27,4 +28,20 @@ class CartItems(models.Model):
 
     def getTotalPrice(self):
         return self.quantity * self.product.vendor_selling_price
+    
+class Wishlist(BaseModel):
+    customer = models.ForeignKey(Customer, on_delete=models.CASCADE, related_name='wishlists')
+
+    def has_product(self, product):
+        return self.items.filter(product = product).exists()
+    
+    def add_product(self, product):
+        self.items.get_or_create(product = product)
+    
+    def remove_product(self, product):
+        self.items.filter(product = product).delete()
+
+class WishlistItems(BaseModel):
+    wishlist = models.ForeignKey(Wishlist, on_delete=models.CASCADE, related_name='items')
+    product = models.ForeignKey(VendorProduct, on_delete=models.CASCADE)
 

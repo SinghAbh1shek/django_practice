@@ -1,6 +1,6 @@
 from django.shortcuts import render, redirect
 from django.http import HttpResponseRedirect
-from .models import Cart, CartItems
+from .models import Cart, CartItems, Wishlist, WishlistItems
 from accounts.models import Customer
 from products.models import VendorProduct
 from django.contrib.auth.decorators import login_required
@@ -86,6 +86,29 @@ def empty_cart(request):
         print('Something goes wrong')
         return HttpResponseRedirect(request.META.get('HTTP_REFERER'))
     
+@login_required(login_url='login')
+def add_to_wishlist(request):
+    product_id = request.GET.get('product_id')
+    product = VendorProduct.objects.get(id = product_id)
+    wishlist, _ = Wishlist.objects.get_or_create(customer = request.user.customer)
+    wishlist.add_product(product = product)
+    return HttpResponseRedirect(request.META.get('HTTP_REFERER'))
 
+def remove_to_wishlist(request):
+    product_id = request.GET.get('product_id')
+    product = VendorProduct.objects.get(id = product_id)
+    wishlist = Wishlist.objects.get(customer = request.user.customer)
+    wishlist.remove_product(product = product)
+    return HttpResponseRedirect(request.META.get('HTTP_REFERER'))
+
+@login_required(login_url='login')
 def wishlist(request):
-    return render(request, 'wishlist.html')
+    wishlists = None
+    try:
+        wishlists = Wishlist.objects.get(customer = request.user.customer)
+    except Exception as e:
+        print("Something  goes wrong")
+    context = {
+        'wishlists': wishlists
+    }
+    return render(request, 'wishlist.html', context)

@@ -37,6 +37,10 @@ class Customer(BaseProfile):
         from orders.models import CartItems
         return CartItems.objects.filter(cart__customer = self, cart__is_paid = False).count()
     
+    def WishlistItemsCount(self):
+        from orders.models import WishlistItems
+        return WishlistItems.objects.filter(wishlist__customer = self).count()
+    
 class Shopkeeper(BaseProfile):
     STATUS_CHOICES = [
         ('pending', 'Pending'),

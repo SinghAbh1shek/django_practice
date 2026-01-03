@@ -5,7 +5,7 @@ from django.db.models import Count
 from django.contrib.postgres.search import SearchVector, SearchRank, SearchQuery, TrigramSimilarity
 #  NOTE: to user TrigamSimilarity we must run "CREATE EXTENSION pg_trgm;" query in our pgadmin
 from django.db.models import Q
-from orders.models import Cart
+from orders.models import Cart, Wishlist
 
 def index(request):
     categories = Category.objects.annotate(
@@ -92,6 +92,7 @@ def product_details(request, id):
 
     cart = None
     in_cart = False
+    in_wishlist = False
 
     if request.user.is_authenticated:
         cart = Cart.objects.filter(
@@ -99,13 +100,17 @@ def product_details(request, id):
             is_paid=False
         ).first()
 
+        wishlist = Wishlist.objects.filter(customer = request.user.customer).first()
+        if wishlist:
+            in_wishlist = wishlist.has_product(product=product)
         if cart:
             in_cart = cart.has_product(product)
 
     return render(request, "product_details.html", {
         "product": product,
         "cart": cart,
-        "in_cart": in_cart
+        "in_cart": in_cart,
+        'in_wishlist': in_wishlist,
     })
 
 
