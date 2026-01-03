@@ -4,16 +4,27 @@ from .models import Cart, CartItems, Wishlist
 from accounts.models import Customer
 from products.models import VendorProduct
 from django.contrib.auth.decorators import login_required
+from .payments import RazorPayPayment
 
 @login_required(login_url='login')
 def get_cart(request):
     cart = None
+    payment_info = None
     try:    
         cart = Cart.objects.get(customer = request.user.customer, is_paid = False)
+        amount = float(cart.getCartTotal())
+        receipt = request.user.username
+
+        payment = RazorPayPayment('INR')
+        payment_info = payment.process_payment(amount * 100, receipt)
+        print(payment_info)
+
     except Exception as e:
+        print(e)
         print("Something Wrong")
     context = {
-        'cart': cart
+        'cart': cart,
+        'payment_info': payment_info,
     }
     return render(request, 'cart.html', context)
 
