@@ -5,6 +5,8 @@ from accounts.models import Customer
 from products.models import VendorProduct
 from django.contrib.auth.decorators import login_required
 from .payments import RazorPayPayment
+from django.views.decorators.csrf import csrf_exempt
+from django.urls import reverse
 
 @login_required(login_url='login')
 def get_cart(request):
@@ -20,6 +22,7 @@ def get_cart(request):
     }
     return render(request, 'cart.html', context)
 
+@login_required(login_url='login')
 def checkout_view(request):
     cart = Cart.objects.get(
         customer=request.user.customer,
@@ -30,6 +33,8 @@ def checkout_view(request):
     receipt = request.user.username
 
 
+    callback_url = request.build_absolute_uri(reverse("success"))
+
     if request.method == "POST":
 
         payment = RazorPayPayment('INR')
@@ -39,8 +44,15 @@ def checkout_view(request):
         "cart": cart,
         "payment_info": payment_info,
         "amount": int(amount * 100),
+        "callback_url": callback_url,
     }
     return render(request, "checkout.html", context)
+
+@csrf_exempt
+def success(request):
+    if request.method != "POST":
+        return redirect("cart") 
+    return render(request, 'success.html')
 
 
 @login_required(login_url='login')
