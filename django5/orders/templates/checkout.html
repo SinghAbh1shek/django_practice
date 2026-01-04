@@ -1,4 +1,7 @@
 {% extends "utils/base.html" %}
+{% block title %}
+Checkout
+{% endblock title %}
 
 {% block start %}
 
@@ -10,8 +13,6 @@
             Click below to complete your payment securely
         </p>
 
-        <form method="POST" class="d-grid">
-            {% csrf_token %}
             <button 
                 type="submit" 
                 id="rzp-button1"
@@ -19,7 +20,6 @@
             >
                 💳 Pay Now
             </button>
-        </form>
 
         <small class="text-muted mt-3 d-block">
             Secured by Razorpay
@@ -38,7 +38,10 @@ var options = {
     "name": "Company Name",
     "description": "Order Payment",
     "order_id": "{{ payment_info.id }}",
-    "callback_url": "{{callback_url}}",
+    "callback_url": "{{callback_url}}?order_id={{payment_info.id}}",
+    "theme": {
+        "color": "#3399cc"
+    }
 };
 
 var rzp1 = new Razorpay(options);

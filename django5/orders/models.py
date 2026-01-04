@@ -8,6 +8,9 @@ from utils.utility.models import BaseModel
 class Cart(models.Model):
     customer = models.ForeignKey(Customer, on_delete=models.CASCADE, related_name='customer_cart')
     is_paid = models.BooleanField(default=False)
+    order_id = models.CharField(max_length=100, null=True, blank=True)
+    payment_id = models.CharField(max_length=100, null=True, blank=True)
+    payment_signature = models.CharField(max_length=1000, null=True, blank=True)
 
     def has_product(self, product):
         return self.cart_items.filter(product=product).exists()

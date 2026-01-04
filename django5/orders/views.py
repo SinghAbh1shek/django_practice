@@ -24,21 +24,28 @@ def get_cart(request):
 
 @login_required(login_url='login')
 def checkout_view(request):
-    cart = Cart.objects.get(
-        customer=request.user.customer,
-        is_paid=False
-    )
-    payment_info = None
-    amount = float(cart.getCartTotal())
-    receipt = request.user.username
+    cart = None
+    payment_info = {}
+    amount = 0
+    try:
+        cart = Cart.objects.get(
+            customer=request.user.customer,
+            is_paid=False
+        )
+        amount = float(cart.getCartTotal())
+        receipt = request.user.username
 
 
-    callback_url = request.build_absolute_uri(reverse("success"))
-
-    if request.method == "POST":
+        callback_url = request.build_absolute_uri(reverse("success"))
 
         payment = RazorPayPayment('INR')
         payment_info = payment.process_payment(amount * 100, receipt)
+        cart.order_id = payment_info['id']
+        cart.save()
+            
+    except Exception as e:
+        print('Something Goes Wrong')
+        return redirect('cart')
 
     context = {
         "cart": cart,
@@ -52,7 +59,21 @@ def checkout_view(request):
 def success(request):
     if request.method != "POST":
         return redirect("cart") 
-    return render(request, 'success.html')
+    try:
+        razorpay_payment_id  = request.POST.get('razorpay_payment_id')
+        razorpay_order_id  = request.POST.get('razorpay_order_id')
+        razorpay_signature  = request.POST.get('razorpay_signature')
+
+        cart = Cart.objects.get(order_id = razorpay_order_id)
+        cart.is_paid = True
+        cart.payment_id = razorpay_payment_id
+        cart.payment_signature = razorpay_signature
+        cart.save()
+
+        return render(request, 'success.html')
+    except Exception as e:
+        print('Something Wrong')
+        return redirect('home')
 
 
 @login_required(login_url='login')
