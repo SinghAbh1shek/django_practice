@@ -9,24 +9,39 @@ from .payments import RazorPayPayment
 @login_required(login_url='login')
 def get_cart(request):
     cart = None
-    payment_info = None
     try:    
         cart = Cart.objects.get(customer = request.user.customer, is_paid = False)
-        amount = float(cart.getCartTotal())
-        receipt = request.user.username
-
-        payment = RazorPayPayment('INR')
-        payment_info = payment.process_payment(amount * 100, receipt)
-        print(payment_info)
 
     except Exception as e:
         print(e)
         print("Something Wrong")
     context = {
         'cart': cart,
-        'payment_info': payment_info,
     }
     return render(request, 'cart.html', context)
+
+def checkout_view(request):
+    cart = Cart.objects.get(
+        customer=request.user.customer,
+        is_paid=False
+    )
+    payment_info = None
+    amount = float(cart.getCartTotal())
+    receipt = request.user.username
+
+
+    if request.method == "POST":
+
+        payment = RazorPayPayment('INR')
+        payment_info = payment.process_payment(amount * 100, receipt)
+
+    context = {
+        "cart": cart,
+        "payment_info": payment_info,
+        "amount": int(amount * 100),
+    }
+    return render(request, "checkout.html", context)
+
 
 @login_required(login_url='login')
 def add_to_cart(request):
