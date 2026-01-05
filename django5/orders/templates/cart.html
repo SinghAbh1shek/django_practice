@@ -10,7 +10,13 @@
 <section>
     <div class="container">
         <div class="row min-vh-100">
+            {% if request.user.customer.cartItemsCount is 0 %}
+            
+            <div class="d-flex justify-content-center">
+                    <img class="img-fluid rounded" style="width: 400px; height: 400px;" src="https://img.freepik.com/premium-vector/modern-design-concept-no-product-found-cart-design_637684-219.jpg?semt=ais_hybrid&w=740&q=80" alt="product_image">
+            </div>
 
+            {% else %}
 
             <div class="col-lg-8 pt-4">
                 <div class="mb-3">
@@ -91,6 +97,9 @@
                     </div>
                 </div>
             </div>
+            
+
+            {% endif %}
 
         </div>
     </div>
