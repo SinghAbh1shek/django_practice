@@ -68,11 +68,13 @@ def success(request):
         cart.is_paid = True
         cart.payment_id = razorpay_payment_id
         cart.payment_signature = razorpay_signature
+        cart.convert_to_order()
         cart.save()
 
         return render(request, 'success.html')
     except Exception as e:
         print('Something Wrong')
+        print(e)
         return redirect('home')
 
 
