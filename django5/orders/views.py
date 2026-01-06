@@ -1,6 +1,6 @@
 from django.shortcuts import render, redirect
 from django.http import HttpResponseRedirect
-from .models import Cart, CartItems, Wishlist
+from .models import Cart, CartItems, Wishlist, Order
 from accounts.models import Customer
 from products.models import VendorProduct
 from django.contrib.auth.decorators import login_required
@@ -195,3 +195,13 @@ def moves_to_wishlist(request):
         print(e)
         print('Something goes wrong')
         return HttpResponseRedirect(request.META.get('HTTP_REFERER'))
+    
+
+def orders(request):
+    orders = Order.objects.filter(customer = request.user.customer).order_by('-created_at')
+
+    context = {
+        'orders': orders
+    }
+
+    return render(request, 'order.html', context)
