@@ -1,6 +1,6 @@
 from django.shortcuts import render, redirect
 from django.http import HttpResponseRedirect
-from .models import Cart, CartItems, Wishlist, Order
+from .models import Cart, CartItems, Wishlist, Order, OrderItems
 from accounts.models import Customer
 from products.models import VendorProduct
 from django.contrib.auth.decorators import login_required
@@ -205,3 +205,14 @@ def orders(request):
     }
 
     return render(request, 'order.html', context)
+
+def order_details(request):
+    order_id = request.GET.get('order_id')
+    order = Order.objects.get(id = order_id)
+    order_items = OrderItems.objects.filter(order = order)
+    
+    context = {
+        'order': order,
+        'order_items': order_items
+    }
+    return render(request, 'order_details.html', context)

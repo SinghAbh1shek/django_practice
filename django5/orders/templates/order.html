@@ -10,10 +10,10 @@
 <section>
     <div class="container">
         <div class="row min-vh-100">
-            {% if request.user.customer.cartItemsCount is 0 %}
+            {% if orders.count is not 0 %}
             
             <div class="d-flex justify-content-center">
-                    <img class="img-fluid rounded" style="width: 400px; height: 400px;" src="https://img.freepik.com/premium-vector/modern-design-concept-no-product-found-cart-design_637684-219.jpg?semt=ais_hybrid&w=740&q=80" alt="product_image">
+                    <img class="img-fluid rounded" style="width: 400px; height: 400px;" src="https://cdni.iconscout.com/illustration/premium/thumb/empty-wishlist-illustration-svg-download-png-11068637.png" alt="product_image">
             </div>
 
             {% else %}
@@ -48,7 +48,7 @@
 
                             <div class="d-flex justify-content-between align-items-center mt-2">
                                 <div>
-                                    <a href="" class="text-primary text-uppercase small text-decoration-none mt-4">
+                                    <a href="{% url "order_detail" %}?order_id={{order.id}}" class="text-primary text-uppercase small text-decoration-none mt-4">
                                         View order details
                                     </a>
                                 </div>
