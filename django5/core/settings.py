@@ -48,6 +48,7 @@ INSTALLED_APPS = [
     'profiles',
     'products',
     'orders',
+    'seller',
 
 
     'django.contrib.sites',
