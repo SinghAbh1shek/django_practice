@@ -196,7 +196,7 @@ def moves_to_wishlist(request):
         print('Something goes wrong')
         return HttpResponseRedirect(request.META.get('HTTP_REFERER'))
     
-
+@login_required(login_url='login')
 def orders(request):
     orders = Order.objects.filter(customer = request.user.customer).order_by('-created_at')
 
@@ -206,6 +206,7 @@ def orders(request):
 
     return render(request, 'order.html', context)
 
+@login_required(login_url='login')
 def order_details(request):
     order_id = request.GET.get('order_id')
     order = Order.objects.get(id = order_id)

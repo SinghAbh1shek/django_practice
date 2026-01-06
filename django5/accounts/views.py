@@ -5,6 +5,8 @@ from .models import Customer
 from django.db import transaction
 
 def login_page(request):
+    if request.user.is_authenticated:
+        return redirect('home')
     if request.method == 'POST':
         email_phone = request.POST.get('email_phone', '').replace(' ', '').lower()
         password = request.POST.get('password')
@@ -46,6 +48,9 @@ def login_page(request):
     return render(request, 'login.html')
 
 def registration(request):
+    if request.user.is_authenticated:
+        return redirect('home')
+    
     if request.method == 'POST':
         first_name = request.POST.get('first_name')
         last_name = request.POST.get('last_name')
