@@ -4,52 +4,71 @@
 
 
 
-    <h4>Overview</h4>
+    <div class="d-flex justify-content-between align-items-center mb-4">
+        <h4 class="mb-0">Overview</h4>
+
+        <a href="" class="btn btn-primary">
+            Add Product
+        </a>
+    </div>
+
 
     <div class="row">
-            <div class="col-md-4">
+            <div class="col-md-3">
                 <div class="card mb-3">
                     <div class="card-body">
                         <h6>Total Orders</h6>
-                        <h3>1896</h3>
+                        <h3>{{total_orders}}</h3>
                     </div>
                 </div>
             </div>
 
-            <div class="col-md-4">
+            <div class="col-md-3">
                 <div class="card mb-3">
                     <div class="card-body">
-                        <h6>Clients</h6>
-                        <h3>568</h3>
+                        <h6>Total Products</h6>
+                        <h3>{{total_product}}</h3>
                     </div>
                 </div>
             </div>
 
-            <div class="col-md-4">
+            <div class="col-md-3">
+                <div class="card mb-3">
+                    <div class="card-body">
+                        <h6>Active Products</h6>
+                        <h3>{{active_product}}</h3>
+                    </div>
+                </div>
+            </div>
+
+            <div class="col-md-3">
                 <div class="card mb-3">
                     <div class="card-body">
                         <h6>Revenue</h6>
-                        <h3>$3M</h3>
+                        <h3>₹{{total_revenue}}</h3>
                     </div>
                 </div>
             </div>
         </div>
 
-        <!-- SIMPLE TABLE -->
         <div class="card">
-            <div class="card-header">Users</div>
+            <div class="card-header">Recent Orders</div>
             <div class="table-responsive">
                 <table class="table">
                     <tr>
-                        <th>Name</th>
-                        <th>City</th>
-                        <th>Status</th>
+                        <th>Order Id</th>
+                        <th>Product</th>
+                        <th>Quantity</th>
+                        <th>Price</th>
                     </tr>
+                    {% for recent_order in recent_orders %}
                     <tr>
-                        <td>John Doe</td>
-                        <td>Delhi</td>
-                        <td>Active</td>
+                        <td>{{recent_order.order}}</td>
+                        <td>{{recent_order.product}}</td>
+                        <td>{{recent_order.quantity}}</td>
+                        <td>{{recent_order.price}}/Per unit</td>
                     </tr>
+                    {% endfor %}
                 </table>
             </div>
         </div>
