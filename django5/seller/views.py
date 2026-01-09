@@ -3,7 +3,10 @@ from products.models import VendorProduct, Category
 from orders.models import OrderItems
 from django.db.models import Sum, F
 from products.models import Product
+from django.contrib.auth.decorators import login_required
 
+
+@login_required(login_url='login')
 def home(request):
 
     shopkeeper = request.user.shopkeeper
@@ -47,7 +50,7 @@ from django.shortcuts import render, redirect
 from django.contrib.auth.decorators import login_required
 from products.models import Category, Product, VendorProduct
 
-@login_required
+@login_required(login_url='login')
 def seller_add_product(request):
     shopkeeper = request.user.shopkeeper
 
@@ -78,7 +81,7 @@ def seller_add_product(request):
                 }
             )
 
-        return redirect('seller_add_product')
+        return redirect('list_product')
 
     context = {
         'categories': categories,
@@ -89,5 +92,12 @@ def seller_add_product(request):
     return render(request, 'add_product.html', context)
 
 
+@login_required(login_url='login')
 def list_product(request):
-    return render(request, 'list_product.html')
+    shopkeeper = request.user.shopkeeper
+    products = VendorProduct.objects.filter(shopkeeper = shopkeeper)
+    print(products)
+    context = {
+        'products': products
+    }
+    return render(request, 'list_product.html', context)
