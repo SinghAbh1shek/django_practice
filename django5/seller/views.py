@@ -1,7 +1,9 @@
-from django.shortcuts import render
-from products.models import VendorProduct
+from django.shortcuts import render, redirect
+from products.models import VendorProduct, Category
 from orders.models import OrderItems
-from django.db.models import Sum, Count, F
+from django.db.models import Sum, F
+from products.models import Product
+
 def home(request):
 
     shopkeeper = request.user.shopkeeper
@@ -41,5 +43,51 @@ def home(request):
     return render(request, 'seller_home.html', context)
 
 
+from django.shortcuts import render, redirect
+from django.contrib.auth.decorators import login_required
+from products.models import Category, Product, VendorProduct
+
+@login_required
 def seller_add_product(request):
-    return render(request, 'add_product.html')
+    shopkeeper = request.user.shopkeeper
+
+    categories = Category.objects.filter(cat_child__isnull=True)
+
+    selected_category_id = request.GET.get('category')
+
+    if selected_category_id:
+        product_lists = Product.objects.filter(
+            category_id=selected_category_id
+        )
+    else:
+        product_lists = Product.objects.none()
+
+    if request.method == "POST":
+        product_id = request.POST.get('product')
+        price = request.POST.get('price')
+        is_active = request.POST.get('is_active') == 'on'
+
+
+        if product_id and price:
+            VendorProduct.objects.get_or_create(
+                shopkeeper=shopkeeper,
+                product_id=product_id,
+                defaults={
+                    'vendor_selling_price': price,
+                    'is_active': is_active
+                }
+            )
+
+        return redirect('seller_add_product')
+
+    context = {
+        'categories': categories,
+        'product_lists': product_lists,
+        'selected_category_id': selected_category_id
+    }
+
+    return render(request, 'add_product.html', context)
+
+
+def list_product(request):
+    return render(request, 'list_product.html')
