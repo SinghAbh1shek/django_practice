@@ -4,36 +4,42 @@ from orders.models import OrderItems
 from django.db.models import Sum, F
 from products.models import Product
 from django.contrib.auth.decorators import login_required
+from accounts.models import UserRole, Shopkeeper
 
 
 @login_required(login_url='login')
 def home(request):
 
-    shopkeeper = request.user.shopkeeper
+    try:
 
-    total_product = VendorProduct.objects.filter(
-        shopkeeper = shopkeeper
-    ).count()
+        shopkeeper = request.user.shopkeeper
 
-    active_product = VendorProduct.objects.filter(
-        shopkeeper = shopkeeper, is_active = True
-    ).count()
+        total_product = VendorProduct.objects.filter(
+            shopkeeper = shopkeeper
+        ).count()
 
-    order_items = OrderItems.objects.filter(
-        product__shopkeeper = shopkeeper,
-        order__cart__is_paid = True
-    )
+        active_product = VendorProduct.objects.filter(
+            shopkeeper = shopkeeper, is_active = True
+        ).count()
 
-    total_orders = order_items.values('order').distinct().count()
+        order_items = OrderItems.objects.filter(
+            product__shopkeeper = shopkeeper,
+            order__cart__is_paid = True
+        )
 
-    total_revenue = order_items.aggregate(
-        total = Sum(F('price') * F('quantity'))
-    )['total'] or 0
+        total_orders = order_items.values('order').distinct().count()
 
-    recent_orders = order_items.select_related(
-        'order', 'product'
-    ).order_by('-created_at')[:10]
+        total_revenue = order_items.aggregate(
+            total = Sum(F('price') * F('quantity'))
+        )['total'] or 0
 
+        recent_orders = order_items.select_related(
+            'order', 'product'
+        ).order_by('-created_at')[:10]
+    
+    except Exception as e:
+        print('Something Goes Wrong')
+        return redirect('seller_onboarding')
 
     context = {
         'total_product': total_product,
@@ -101,3 +107,31 @@ def list_product(request):
         'products': products
     }
     return render(request, 'list_product.html', context)
+
+def seller_onboarding(request):
+    user = request.user
+    if request.method == 'POST':
+        shop_name = request.POST.get('shop_name')
+        bmp_id = request.POST.get('bmp_id')
+        gst_number = request.POST.get('gst_number')
+        adhar_number = request.POST.get('adhar_number')
+        adhar_image = request.FILES.get('adhar_image')
+
+        if not shop_name or not bmp_id or not gst_number or not adhar_image or not adhar_number:
+            print('All fields requires')
+            return redirect('seller_onboarding')
+        
+        shopkeeper = Shopkeeper.objects.get(user = user)
+        shopkeeper.shop_name = shop_name
+        shopkeeper.bmp_id = bmp_id
+        shopkeeper.gst_number = gst_number
+        shopkeeper.adhar_number = adhar_number
+        shopkeeper.adhar_image = adhar_image
+        shopkeeper.save()
+
+        user_role = UserRole.objects.get(user=user)
+        user_role.is_seller = True
+        user_role.save()
+        
+        return redirect('home')
+    return render(request, 'seller_onboarding.html')
