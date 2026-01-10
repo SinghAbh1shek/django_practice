@@ -108,8 +108,14 @@ def list_product(request):
     }
     return render(request, 'list_product.html', context)
 
+@login_required(login_url='login')
 def seller_onboarding(request):
     user = request.user
+    user_role = UserRole.objects.get(user=user)
+    
+    if user_role.is_seller == True:
+        return redirect('seller_home')
+
     if request.method == 'POST':
         shop_name = request.POST.get('shop_name')
         bmp_id = request.POST.get('bmp_id')
