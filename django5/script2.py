@@ -1,20 +1,11 @@
-from datetime import datetime
 from django.template.loader import get_template
 from django.conf import settings
 import pdfkit
-
-def generate_order_id(index):
-    current_date = datetime.now()
-    day = current_date.day
-    month = current_date.month
-    year = current_date.year
-
-    return f"OD00{year}{month}{day}{index.zfill(5)}"
-
+from orders.models import *
 
 def generate_order_pdf(instance, data):
     dynamic_directory_name = f"media/pdfs/{instance.order_id}.pdf"
-    template_name = 'invoice',
+    template_name = 'pdfs/invoice'
 
     options = {
         'no-outline': None,
@@ -33,3 +24,7 @@ def generate_order_pdf(instance, data):
     config = pdfkit.configuration(wkhtmltopdf = path_whtmltopdf)
     pdfkit.from_string(content, exact_filepath, options=options, configuration=config)
     
+
+order = Order.objects.last()
+
+generate_order_pdf(order, order.get_order_data())

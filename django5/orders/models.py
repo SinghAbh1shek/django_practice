@@ -79,6 +79,32 @@ class Order(BaseModel):
         self.order_id = generate_order_id(str(Order.objects.count()+1))
         super(Order, self).save(*args, **kwargs)
 
+    def get_order_data(self):
+        data = {
+            'customer':{
+                'name': self.customer.user.first_name,
+                'phone': self.customer.phone or None,
+                'email': self.customer.user.email or None,
+            },
+            'order': {
+                'order_id': self.order_id,
+                'total': self.total,
+            },
+            'order_items': []
+        }
+        order_items = [
+            {
+                'product': item.product.product.title,
+                'quantity': item.quantity,
+                'price': item.price,
+                'total_price': item.price * item.quantity,
+            }
+            for item in self.order_items.all()
+        ]
+        data['order_items'] = order_items
+
+        return data
+
     def __str__(self):
         return self.order_id
     
