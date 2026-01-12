@@ -22,7 +22,7 @@
             <div class="card">
                 <div class="d-flex flex-row p-2"> 
                     <img src="" width="">
-                    <div class="d-flex flex-column"> <span class="font-weight-bold">Order Invoice</span> <small>INV-001</small> </div>
+                    <div class="d-flex flex-column"> <span class="font-weight-bold">Order Invoice</span> <br> <small>Order-ID: {{order.order_id}}</small> </div>
                 </div>
                 <hr>
                 <div class="table-responsive p-2">
@@ -33,7 +33,9 @@
                                 <td>From</td>
                             </tr>
                             <tr class="content">
-                                <td class="font-weight-bold">John Doe <br> xyz road <br>Patna <br>820000</td>
+                                <td class="font-weight-bold">{{customer.name}} <br> 
+                                    {% if customer.phone %} {{customer.phone}} {% else %} {{customer.email}} {% endif %} <br> 
+                                    xyz road <br>Patna <br>820000</td>
                                 <td class="font-weight-bold">Seller <br> abc place <br> Delhi</td>
                             </tr>
                         </tbody>
@@ -44,33 +46,24 @@
                     <table class="table table-borderless">
                         <tbody>
                             <tr class="add">
+                                <td>SNo.</td>
                                 <td>Image</td>
                                 <td>Title</td>
                                 <td>Price</td>
                                 <td>Quantity</td>
                                 <td class="text-center">Total</td>
                             </tr>
+
+                            {% for item in order_items %}
                             <tr class="content">
-                                <td>Image</td>
-                                <td>Website Redesign</td>
-                                <td>$1,500</td>
-                                <td>15</td>
-                                <td class="text-center">$22,500</td>
+                                <td>{{forloop.counter}}</td>
+                                <td>{% if item.image is none %}No Image{% else %}<img src="{{item.image}}" height="50px" width="50px">{% endif %}</td>
+                                <td>{{item.product|truncatewords:10}}</td>
+                                <td>₹{{item.price}}</td>
+                                <td>{{item.quantity}}</td>
+                                <td class="text-center">₹{{item.total_price}}</td>
                             </tr>
-                            <tr class="content">
-                                <td>Image</td>
-                                <td>Logo & Identity</td>
-                                <td>$1,500</td>
-                                <td>10</td>
-                                <td class="text-center">$15,000</td>
-                            </tr>
-                            <tr class="content">
-                                <td>Image</td>
-                                <td>Marketing Collateral</td>
-                                <td>$1,500</td>
-                                <td>3</td>
-                                <td class="text-center">$4,500</td>
-                            </tr>
+                            {% endfor %}
                         </tbody>
                     </table>
                 </div>
@@ -86,9 +79,9 @@
                             </tr>
                             <tr class="content">
                                 <td></td>
-                                <td>₹40,000</td>
+                                <td>₹{{order.total}}</td>
                                 <td>Free</td>
-                                <td class="text-center">₹42,500</td>
+                                <td class="text-center">₹{{order.total}}</td>
                             </tr>
                         </tbody>
                     </table>

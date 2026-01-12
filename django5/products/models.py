@@ -57,6 +57,13 @@ class VendorProduct(BaseModel):
     class Meta:
         unique_together = ('shopkeeper', 'product')
 
+    def get_first_image(self):
+        image =  self.product.images.first().image.url
+        if image:
+            return f"http://127.0.0.1:8000{image}"
+        else:
+            return None
+
     def __str__(self):
         return f"{self.shopkeeper} - {self.product}"
 

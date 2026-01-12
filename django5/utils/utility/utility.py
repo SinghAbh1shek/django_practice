@@ -14,7 +14,7 @@ def generate_order_id(index):
 
 def generate_order_pdf(instance, data):
     dynamic_directory_name = f"media/pdfs/{instance.order_id}.pdf"
-    template_name = 'invoice',
+    template_name = 'pdfs/invoice'
 
     options = {
         'no-outline': None,
@@ -32,4 +32,3 @@ def generate_order_pdf(instance, data):
     exact_filepath = f"{settings.BASE_DIR}/{dynamic_directory_name}"
     config = pdfkit.configuration(wkhtmltopdf = path_whtmltopdf)
     pdfkit.from_string(content, exact_filepath, options=options, configuration=config)
-    

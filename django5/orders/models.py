@@ -3,7 +3,7 @@ from accounts.models import Customer
 from products.models import VendorProduct
 from django.db.models import Sum, F
 from utils.utility.models import BaseModel
-from utils.utility.utility import generate_order_id
+from utils.utility.utility import generate_order_id, generate_order_pdf
 
 
 class Cart(models.Model):
@@ -41,6 +41,7 @@ class Cart(models.Model):
                     quantity = cart_item.quantity,
                     price = cart_item.product.vendor_selling_price
                 )
+            generate_order_pdf(order, order.get_order_data())
 
 class CartItems(models.Model):
     cart = models.ForeignKey(Cart, on_delete=models.CASCADE, related_name='cart_items')
@@ -76,7 +77,8 @@ class Order(BaseModel):
     total = models.DecimalField(max_digits=10, decimal_places=2)
 
     def save(self, *args, **kwargs):
-        self.order_id = generate_order_id(str(Order.objects.count()+1))
+        if self.pk is None:
+            self.order_id = generate_order_id(str(Order.objects.count()+1))
         super(Order, self).save(*args, **kwargs)
 
     def get_order_data(self):
@@ -98,6 +100,7 @@ class Order(BaseModel):
                 'quantity': item.quantity,
                 'price': item.price,
                 'total_price': item.price * item.quantity,
+                'image': item.product.get_first_image(),
             }
             for item in self.order_items.all()
         ]
