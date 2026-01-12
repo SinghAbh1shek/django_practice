@@ -75,6 +75,7 @@ class Order(BaseModel):
     payment_id = models.CharField(max_length=100, null=True, blank=True)
     payment_signature = models.CharField(max_length=1000, null=True, blank=True)
     total = models.DecimalField(max_digits=10, decimal_places=2)
+    invoice_pdf = models.FileField(upload_to='pdfs/', null=True, blank=True)
 
     def save(self, *args, **kwargs):
         if self.pk is None:
