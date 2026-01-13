@@ -16,7 +16,7 @@
                 <div class="mb-3">
                     <div class="d-flex justify-content-between align-items-baseline">
                         <h5 class="mb-4">
-                            Order Details (<span>{{ cart.customer.cartItemsCount }}</span> items)
+                            Order Details
                         </h5>
                     </div>
 
@@ -70,6 +70,17 @@
                             <li class="list-group-item d-flex justify-content-between px-0">
                                 Order Date
                                 <span>{{order.created_at}}</span>
+                            </li>
+                            <li class="list-group-item d-flex justify-content-between px-0">
+                                {% if order.invoice_pdf %}
+                                    <a href="{{order.invoice_pdf.url}}" target="_blank" class="text-danger text-uppercase smallfs text-decoration-none mt-4 ml-5">
+                                        <i class="fa-solid fa-file-pdf"></i> Download Invoice
+                                    </a>
+                                    {% else %}
+                                    <a href="{% url "generate_invoice" %}?id={{order.id}}" class="text-secondary text-uppercase smallfs text-decoration-none mt-4 ml-5">
+                                        <i class="fa-solid fa-file-pdf"></i> Generate Invoice
+                                    </a>
+                                    {% endif %}
                             </li>
                         </ul>
                     </div>

@@ -7,6 +7,7 @@ from django.contrib.auth.decorators import login_required
 from .payments import RazorPayPayment
 from django.views.decorators.csrf import csrf_exempt
 from django.urls import reverse
+from utils.utility.utility import generate_order_pdf
 
 @login_required(login_url='login')
 def get_cart(request):
@@ -217,3 +218,16 @@ def order_details(request):
         'order_items': order_items
     }
     return render(request, 'order_details.html', context)
+
+@login_required(login_url='login')
+def generate_invoice(request):
+    try:
+        id = request.GET.get('id')
+        order = Order.objects.get(id = id)
+        if not order.invoice_pdf:
+            generate_order_pdf(order, order.get_order_data())
+
+        return HttpResponseRedirect(request.META.get('HTTP_REFERER'))
+    except Exception as e:
+        print('Something Goes Wrong')
+        return HttpResponseRedirect(request.META.get('HTTP_REFERER'))

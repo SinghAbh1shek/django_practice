@@ -15,4 +15,5 @@ urlpatterns = [
     path('add-to-wishlist/', add_to_wishlist, name='add-to-wishlist'),
     path('remove-to-wishlist/', remove_to_wishlist, name='remove-to-wishlist'),
     path('moves-to-wishlist/', moves_to_wishlist, name='moves-to-wishlist'),
+    path('generate-invoice/', generate_invoice, name='generate_invoice'),
 ]
