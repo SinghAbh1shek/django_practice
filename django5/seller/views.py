@@ -1,5 +1,5 @@
 from django.shortcuts import render, redirect
-from products.models import VendorProduct, Category
+from products.models import VendorProduct, Category, Product
 from orders.models import OrderItems
 from django.db.models import Sum, F
 from products.models import Product
@@ -50,11 +50,6 @@ def home(request):
     }
 
     return render(request, 'seller_home.html', context)
-
-
-from django.shortcuts import render, redirect
-from django.contrib.auth.decorators import login_required
-from products.models import Category, Product, VendorProduct
 
 @login_required(login_url='login')
 def seller_add_product(request):
@@ -110,34 +105,52 @@ def list_product(request):
 
 @login_required(login_url='login')
 def seller_onboarding(request):
-    user = request.user
-    user_role = UserRole.objects.get(user=user)
-    
-    if user_role.is_seller == True:
-        return redirect('seller_home')
-
-    if request.method == 'POST':
-        shop_name = request.POST.get('shop_name')
-        bmp_id = request.POST.get('bmp_id')
-        gst_number = request.POST.get('gst_number')
-        adhar_number = request.POST.get('adhar_number')
-        adhar_image = request.FILES.get('adhar_image')
-
-        if not shop_name or not bmp_id or not gst_number or not adhar_image or not adhar_number:
-            print('All fields requires')
-            return redirect('seller_onboarding')
-        
-        shopkeeper = Shopkeeper.objects.get(user = user)
-        shopkeeper.shop_name = shop_name
-        shopkeeper.bmp_id = bmp_id
-        shopkeeper.gst_number = gst_number
-        shopkeeper.adhar_number = adhar_number
-        shopkeeper.adhar_image = adhar_image
-        shopkeeper.save()
-
+    try:
+        user = request.user
         user_role = UserRole.objects.get(user=user)
-        user_role.is_seller = True
-        user_role.save()
         
-        return redirect('home')
+        if user_role.is_seller == True:
+            return redirect('seller_home')
+
+        if request.method == 'POST':
+            shop_name = request.POST.get('shop_name')
+            bmp_id = request.POST.get('bmp_id')
+            gst_number = request.POST.get('gst_number')
+            adhar_number = request.POST.get('adhar_number')
+            adhar_image = request.FILES.get('adhar_image')
+
+            if not shop_name or not bmp_id or not gst_number or not adhar_image or not adhar_number:
+                print('All fields requires')
+                return redirect('seller_onboarding')
+            
+            if Shopkeeper.objects.filter(adhar_number = adhar_number).exists():
+                print('Adhar number already exist')
+                return redirect('seller_onboarding')
+            
+            if Shopkeeper.objects.filter(gst_number = gst_number).exists():
+                print('GST number already exist')
+                return redirect('seller_onboarding')
+            
+            if Shopkeeper.objects.filter(bmp_id = adhar_number).exists():
+                print('BMP ID already exist')
+                return redirect('seller_onboarding')
+
+            shopkeeper, _ = Shopkeeper.objects.get_or_create(user = user)
+            shopkeeper.shop_name = shop_name
+            shopkeeper.bmp_id = bmp_id
+            shopkeeper.gst_number = gst_number
+            shopkeeper.adhar_number = adhar_number
+            shopkeeper.adhar_image = adhar_image
+            shopkeeper.save()
+
+            user_role = UserRole.objects.get(user=user)
+            user_role.is_seller = True
+            user_role.save()
+            
+            return redirect('seller_home')
+    except Exception as e:
+        print(e)
+        print('Something Goes Wrong')
+        return redirect('seller_onboarding')
+    
     return render(request, 'seller_onboarding.html')
