@@ -15,11 +15,15 @@
         </ul>
     </nav>
     <hr>
-    <h1>This is home page</h1>
-
-    {% if result.id %}
-    <p>Result ID: {{result.id}}</p>
-    <a href="{% url "check_result" result.id %}">Result</a>
+    <h1>This is result page</h1>
+    {% if result %}
+        <p>Result ID: {{result.id}}</p>
+        <p>Task ID: {{result.task_id}}</p>
+        <p>Result status: {{result.status}}</p>
+        <p>Result state: {{result.state}}</p>
+        <p>Result result: {{result.result}}</p>
     {% endif %}
+
+    
 </body>
 </html>

@@ -37,6 +37,8 @@ INSTALLED_APPS = [
     'django.contrib.sessions',
     'django.contrib.messages',
     'django.contrib.staticfiles',
+    'django_celery_results',
+    'django_celery_beat',       # When we want to schedule task from admin panel
     'myapp',
 ]
 
@@ -125,4 +127,24 @@ DEFAULT_AUTO_FIELD = 'django.db.models.BigAutoField'
 # Celery Settings
 
 CELERY_BROKER_URL = 'redis://127.0.0.1:6379/0'
+# CELERY_RESULT_BACKEND = 'redis://127.0.0.1:6379/0'
+CELERY_RESULT_BACKEND = 'django-db'
 CELERY_TIMEZONE = 'Asia/Kolkata'
+CELERY_RESULT_EXTENDED = True
+CELERY_BEAT_SCHEDULER = 'django_celery_beat.schedulers.DatabaseScheduler'
+
+# Method 1 for periodic task
+# CELERY_BEAT_SCHEDULE = {
+#     'every-10-seconds': {
+#         # 'task': 'myapp.tasks.clear_session_cache',
+#         'task': 'clear_session_cache_task',  # We write like this if we are using task name
+#         # 'schedule': 10,
+#         'schedule': 10,
+#         'args': ('111',)
+#     }, 
+#     # We can add more task
+# }
+
+
+# uv run celery -A core worker -l info      --> To run celery
+# uv run celery -A core beat -l info      --> To run preodic tasks
